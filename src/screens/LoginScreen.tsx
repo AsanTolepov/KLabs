@@ -8,8 +8,7 @@ import {
     updateProfile, 
     signInWithPopup,
     setPersistence, 
-    browserLocalPersistence,
-    AuthError
+    browserLocalPersistence // <--- MUHIM: Lokal xotirada saqlash
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
@@ -26,7 +25,7 @@ const LoginScreen = () => {
   const [error, setError] = useState('');
 
   const handleSuccess = () => {
-    navigate('/app', { replace: true }); // /welcome o'rniga /app ga yo'naltirish ishonchliroq
+    navigate('/app', { replace: true });
   };
 
   // Email/Parol orqali kirish
@@ -36,6 +35,7 @@ const LoginScreen = () => {
     setError('');
 
     try {
+        // Sessiyani brauzer (yoki webview) xotirasida saqlashni yoqamiz
         await setPersistence(auth, browserLocalPersistence);
 
         if (isSignUp) {
@@ -66,17 +66,16 @@ const LoginScreen = () => {
     }
   };
 
-  // Google Login (WEBVIEW UCHUN MAXSUS)
+  // Google Login (WEBVIEW/APPILIX UCHUN)
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError('');
     
     try {
-        // 1. Sessiyani saqlashni majburlaymiz
+        // 1. Sessiyani saqlashni majburlaymiz (MUHIM)
         await setPersistence(auth, browserLocalPersistence);
 
         // 2. POPUP orqali ochish
-        // Median ilovasida bu alohida oyna ochadi, Redirect EMAS.
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
 
@@ -100,18 +99,13 @@ const LoginScreen = () => {
         
     } catch (err: any) {
         console.error("Google Login Error Full:", err);
-        
-        // Xatoliklarni aniqroq ko'rsatish
         const errorCode = err.code;
         
         if (errorCode === 'auth/popup-closed-by-user') {
             setError("Kirish oynasi yopildi.");
         } else if (errorCode === 'auth/popup-blocked') {
             setError("Brauzer oynasi bloklandi. Ruxsat bering.");
-        } else if (errorCode === 'auth/cancelled-popup-request') {
-            setError("Jarayon bekor qilindi.");
         } else {
-            // Eng muhim joy: Agar WebView sababli bo'lsa:
             setError(`Xatolik: ${err.message}. Internetni tekshiring.`);
         }
     } finally {
@@ -122,13 +116,11 @@ const LoginScreen = () => {
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden flex flex-col justify-center px-6">
       <div className="relative z-10 w-full max-w-sm mx-auto">
-        
         <div className="flex justify-center mb-6">
             <div className="bg-white p-4 rounded-3xl shadow-xl shadow-blue-200">
                 <Atom className="w-12 h-12 text-blue-600" />
             </div>
         </div>
-
         <div className="text-center mb-6">
             <h1 className="text-3xl font-black text-gray-800 mb-2">
                 {isSignUp ? "Ro'yxatdan o'tish" : "Xush kelibsiz!"}
@@ -137,8 +129,6 @@ const LoginScreen = () => {
         </div>
 
         <div className="bg-white/80 backdrop-blur-lg p-6 rounded-3xl shadow-lg border border-white">
-            
-            {/* Google Button */}
             <button 
                 onClick={handleGoogleLogin}
                 type="button"
@@ -165,70 +155,32 @@ const LoginScreen = () => {
                         {error}
                     </div>
                 )}
-
                 {isSignUp && (
                     <div className="bg-gray-50 rounded-xl flex items-center px-4 border border-gray-100 focus-within:border-blue-500 transition-all">
                         <User className="text-gray-400 w-5 h-5" />
-                        <input 
-                            type="text" 
-                            placeholder="Ismingiz" 
-                            className="w-full bg-transparent p-4 outline-none text-gray-700"
-                            required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
+                        <input type="text" placeholder="Ismingiz" className="w-full bg-transparent p-4 outline-none text-gray-700" required value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                 )}
-                 
                 <div className="bg-gray-50 rounded-xl flex items-center px-4 border border-gray-100 focus-within:border-blue-500 transition-all">
                     <Mail className="text-gray-400 w-5 h-5" />
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
-                        className="w-full bg-transparent p-4 outline-none text-gray-700"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <input type="email" placeholder="Email" className="w-full bg-transparent p-4 outline-none text-gray-700" required value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
-
                 <div className="bg-gray-50 rounded-xl flex items-center px-4 border border-gray-100 focus-within:border-blue-500 transition-all">
                     <Lock className="text-gray-400 w-5 h-5" />
-                    <input 
-                        type={showPassword ? "text" : "password"} 
-                        placeholder="Parol" 
-                        className="w-full bg-transparent p-4 outline-none text-gray-700"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <input type={showPassword ? "text" : "password"} placeholder="Parol" className="w-full bg-transparent p-4 outline-none text-gray-700" required value={password} onChange={(e) => setPassword(e.target.value)} />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="w-5 h-5 text-gray-400"/> : <Eye className="w-5 h-5 text-gray-400"/>}
                     </button>
                 </div>
-
-                <button 
-                    type="submit" 
-                    disabled={loading}
-                    className="w-full bg-blue-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center"
-                >
-                    {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
-                        <>
-                            {isSignUp ? "Ro'yxatdan o'tish" : "Kirish"}
-                            <ArrowRight className="w-5 h-5 ml-2" />
-                        </>
-                    )}
+                <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 active:scale-95 transition-all flex items-center justify-center">
+                    {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <>{isSignUp ? "Ro'yxatdan o'tish" : "Kirish"} <ArrowRight className="w-5 h-5 ml-2" /></>}
                 </button>
             </form>
         </div>
-
         <div className="mt-6 text-center">
             <p className="text-gray-500 font-medium text-sm">
                 {isSignUp ? "Hisobingiz bormi?" : "Hali hisobingiz yo'qmi?"}
-                <button 
-                    onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
-                    className="ml-2 text-blue-600 font-bold hover:underline"
-                >
+                <button onClick={() => { setIsSignUp(!isSignUp); setError(''); }} className="ml-2 text-blue-600 font-bold hover:underline">
                     {isSignUp ? "Kirish" : "Ro'yxatdan o'ting"}
                 </button>
             </p>
