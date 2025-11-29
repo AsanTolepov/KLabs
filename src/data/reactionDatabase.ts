@@ -1,89 +1,89 @@
 import { ReactionResult } from '../types';
 
-// ALFAVIT TARTIBIDA kalitlar yozilishi shart: masalan "H-O", "C-H-O" (harf bo'yicha sort qilingan)
+// DIQQAT: Kalitlar doim ALFAVIT tartibida yozilishi shart!
+
 export const LOCAL_REACTIONS: Record<string, ReactionResult> = {
+  
   // =============== 2 ELEMENTLI REAKSIYALAR ===============
 
-  // Suv
-  "H-O": {
+  // Uglerod + Oltingugurt (Uglerod disulfid) - SIZ SO'RAGAN QISM
+  "C-S": {
     possible: true,
-    reaction_type: "Sintez / Portlovchi yonish",
-    explanation: "Vodorod va kislorod aralashmasi uchqun bilan portlab, suv hosil qiladi (2H₂ + O₂ → 2H₂O)",
-    products: ["H₂O (Suv)"],
+    reaction_type: "Sintez",
+    explanation: "Uglerod va oltingugurt yuqori haroratda birikib, uglerod disulfidini hosil qiladi.",
+    products: ["CS₂ (Uglerod disulfid)"],
+    visualization_plan: {
+      template: "gas_evolution",
+      duration_ms: 2200,
+      colors: ["#333333", "#ffff00"],
+      effects: { bubbles: true },
+      recommended_3d_assets: { product_model: "cs2_molecule" } // Bu modelType MoleculeViewer da "cs2" ni ishlatadi
+    }
+  },
+
+  // Kumush + Oltingugurt
+  "Ag-S": {
+    possible: true,
+    reaction_type: "Qorayish",
+    explanation: "Kumush buyumlar havodagi oltingugurt bilan reaksiyaga kirishib qorayadi.",
+    products: ["Ag₂S (Kumush sulfid)"],
+    visualization_plan: {
+      template: "rust_growth",
+      duration_ms: 3000,
+      colors: ["#C0C0C0", "#000000"],
+      effects: { slow_growth: true },
+      recommended_3d_assets: { product_model: "rust" }
+    }
+  },
+
+  "Al-Cl": {
+    possible: true,
+    reaction_type: "Ekzotermik Sintez",
+    explanation: "Alyuminiy xlor gazi bilan shiddatli reaksiyaga kirishib, oq tutun hosil qiladi.",
+    products: ["AlCl₃ (Alyuminiy xlorid)"],
     visualization_plan: {
       template: "explosion_bubbles",
-      duration_ms: 3500,
-      colors: ["#3b82f6", "#ffffff"],
-      effects: { bubbles: true, flash: true, explosion: true, crystals: false },
-      recommended_3d_assets: { product_model: "h2o_molecule" }
+      duration_ms: 2500,
+      colors: ["#ffffff"],
+      effects: { smoke: true, flash: true },
+      recommended_3d_assets: { product_model: "generic" }
     }
   },
 
-  // Osh tuzi
-  "Cl-Na": {
+  "Al-O": {
     possible: true,
-    reaction_type: "Sintez",
-    explanation: "Natriy xlor bilan shiddatli reaksiyaga kirishib, osh tuzi hosil qiladi (2Na + Cl₂ → 2NaCl)",
-    products: ["NaCl (Osh tuzi)"],
+    reaction_type: "Oksidlanish",
+    explanation: "Alyuminiy sirti havoda darhol oksidlanadi.",
+    products: ["Al₂O₃ (Alyuminiy oksidi)"],
     visualization_plan: {
       template: "crystal_growth",
-      duration_ms: 3000,
-      colors: ["#ffffff"],
-      effects: { flash: true, crystals: true, smoke: true },
-      recommended_3d_assets: { product_model: "nacl_crystal" }
+      duration_ms: 2000,
+      colors: ["#e0e0e0"],
+      effects: { crystals: true },
+      recommended_3d_assets: { product_model: "crystal" }
     }
   },
 
-  // Karbonat angidrid
-  "C-O": {
-    possible: true,
-    reaction_type: "Yonish",
-    explanation: "Ko'mir (uglerod) kislorodda yonib, karbonat angidrid gazini hosil qiladi",
-    products: ["CO₂ (Karbonat angidrid)"],
-    visualization_plan: {
-      template: "gas_evolution",
-      duration_ms: 2500,
-      colors: ["#888888", "#cccccc"],
-      effects: { bubbles: true, flash: true },
-      recommended_3d_assets: { product_model: "co2_molecule" }
-    }
+  "Au-H": {
+    possible: false,
+    reaction_type: "Reaksiya yo'q",
+    explanation: "Oltin vodorod bilan reaksiyaga kirishmaydi.",
+    products: [],
+    visualization_plan: { template: "none", duration_ms: 1000, colors: [], effects: {}, recommended_3d_assets: { product_model: null } }
   },
 
-  // Ammiak
-  "H-N": {
-    possible: true,
-    reaction_type: "Sintez (Haber jarayoni)",
-    explanation: "Azot va vodorod yuqori bosim/harorat va katalizator yordamida ammiak hosil qiladi (N₂ + 3H₂ → 2NH₃)",
-    products: ["NH₃ (Ammiak)"],
-    visualization_plan: {
-      template: "gas_evolution",
-      duration_ms: 2800,
-      colors: ["#87CEEB"],
-      effects: { bubbles: true },
-      recommended_3d_assets: { product_model: "nh3_molecule" }
-    }
+  "Au-O": {
+    possible: false,
+    reaction_type: "Reaksiya yo'q",
+    explanation: "Oltin asil metall bo'lgani uchun kislorodda zanglamaydi.",
+    products: [],
+    visualization_plan: { template: "none", duration_ms: 1000, colors: [], effects: {}, recommended_3d_assets: { product_model: null } }
   },
 
-  // Xlorovodorod
-  "Cl-H": {
-    possible: true,
-    reaction_type: "Sintez",
-    explanation: "Vodorod va xlor yorug‘likda portlovchi reaksiyaga kirishib, HCl hosil qiladi",
-    products: ["HCl (Xlorovodorod)"],
-    visualization_plan: {
-      template: "flash",
-      duration_ms: 1800,
-      colors: ["#ffff99"],
-      effects: { flash: true, bubbles: true },
-      recommended_3d_assets: { product_model: "hcl_molecule" }
-    }
-  },
-
-  // Metan
   "C-H": {
     possible: true,
     reaction_type: "Sintez",
-    explanation: "Uglerod va vodorod metan (tabiiy gaz) hosil qiladi (Sabatye jarayoni)",
+    explanation: "Uglerod va vodorod Metanni hosil qiladi.",
     products: ["CH₄ (Metan)"],
     visualization_plan: {
       template: "gas_evolution",
@@ -94,27 +94,81 @@ export const LOCAL_REACTIONS: Record<string, ReactionResult> = {
     }
   },
 
-  // Alyuminiy oksidi (korund)
-  "Al-O": {
+  "C-O": {
     possible: true,
-    reaction_type: "Sintez",
-    explanation: "Alyuminiy kislorod bilan qizdirilganda korund hosil qiladi",
-    products: ["Al₂O₃ (Alyuminiy oksidi)"],
+    reaction_type: "Yonish",
+    explanation: "Ko'mir kislorodda yonib, karbonat angidrid hosil qiladi.",
+    products: ["CO₂ (Karbonat angidrid)"],
     visualization_plan: {
-      template: "crystal_growth",
-      duration_ms: 3200,
-      colors: ["#ff4444", "#ffffff"],
-      effects: { flash: true, crystals: true },
-      recommended_3d_assets: { product_model: "al2o3_crystal" }
+      template: "gas_evolution",
+      duration_ms: 2500,
+      colors: ["#888888", "#cccccc"],
+      effects: { bubbles: true, flash: true },
+      recommended_3d_assets: { product_model: "co2_molecule" }
     }
   },
 
-  // Temir oksidi (zang)
+  "Ca-O": {
+    possible: true,
+    reaction_type: "Yonish",
+    explanation: "Kalsiy havoda yonib, ohak hosil qiladi.",
+    products: ["CaO (Kalsiy oksidi)"],
+    visualization_plan: {
+      template: "flash",
+      duration_ms: 2000,
+      colors: ["#ffffff"],
+      effects: { flash: true, crystals: true },
+      recommended_3d_assets: { product_model: "crystal" }
+    }
+  },
+
+  "Cl-H": {
+    possible: true,
+    reaction_type: "Sintez",
+    explanation: "Vodorod va Xlor yorug'likda portlab, HCl hosil qiladi.",
+    products: ["HCl (Xlorovodorod)"],
+    visualization_plan: {
+      template: "flash",
+      duration_ms: 1800,
+      colors: ["#ffff99"],
+      effects: { flash: true, bubbles: true },
+      recommended_3d_assets: { product_model: "hcl_molecule" }
+    }
+  },
+
+  "Cl-Na": {
+    possible: true,
+    reaction_type: "Sintez",
+    explanation: "Natriy va Xlor osh tuzini hosil qiladi.",
+    products: ["NaCl (Osh tuzi)"],
+    visualization_plan: {
+      template: "crystal_growth",
+      duration_ms: 3000,
+      colors: ["#ffffff"],
+      effects: { flash: true, crystals: true, smoke: true },
+      recommended_3d_assets: { product_model: "nacl_crystal" }
+    }
+  },
+
+  "Cu-O": {
+    possible: true,
+    reaction_type: "Oksidlanish",
+    explanation: "Mis qizdirilganda qorayib, mis oksidi hosil qiladi.",
+    products: ["CuO (Mis oksidi)"],
+    visualization_plan: {
+      template: "rust_growth",
+      duration_ms: 3000,
+      colors: ["#000000"],
+      effects: { slow_growth: true },
+      recommended_3d_assets: { product_model: "rust" }
+    }
+  },
+
   "Fe-O": {
     possible: true,
-    reaction_type: "Korrozija / Yonish",
-    explanation: "Temir kislorod va namlik bilan zanglaydi (4Fe + 3O₂ → 2Fe₂O₃)",
-    products: ["Fe₂O₃ (Temir(III) oksidi)"],
+    reaction_type: "Korroziya",
+    explanation: "Temir zanglaydi (Fe₂O₃).",
+    products: ["Fe₂O₃ (Zang)"],
     visualization_plan: {
       template: "rust_growth",
       duration_ms: 5000,
@@ -124,115 +178,161 @@ export const LOCAL_REACTIONS: Record<string, ReactionResult> = {
     }
   },
 
-  // =============== 3 ELEMENTLI REAKSIYALAR ===============
-
-  // Pishirish sodasi (Na + H + C + O)
-  "C-H-Na-O": {
+  "Fe-S": {
     possible: true,
-    reaction_type: "Sintez",
-    explanation: "Solvay jarayoni orqali natriy, vodorod, uglerod va kisloroddan pishirish sodasi olinadi",
-    products: ["NaHCO₃ (Pishirish sodasi)"],
-    visualization_plan: {
-      template: "crystal_growth",
-      duration_ms: 4000,
-      colors: ["#ffffff"],
-      effects: { crystals: true },
-      recommended_3d_assets: { product_model: "nahco3_crystal" }
-    }
-  },
-
-  // Ohak (Ca + C + O)
-  "C-Ca-O": {
-    possible: true,
-    reaction_type: "Sintez",
-    explanation: "Kalsiy karbonat issiqlikda parchalanib, ohak va CO₂ hosil qiladi (teskari jarayon ko'rsatilgan)",
-    products: ["CaO (Ohak)", "CO₂ (Karbonat angidrid)"],
+    reaction_type: "Birikish",
+    explanation: "Temir va oltingugurt temir sulfid hosil qiladi.",
+    products: ["FeS (Temir sulfid)"],
     visualization_plan: {
       template: "crystal_glow",
-      duration_ms: 3500,
-      colors: ["#ffffff", "#ffff99"],
-      effects: { flash: true, crystals: true },
-      recommended_3d_assets: { product_model: "cao_crystal" }
+      duration_ms: 3000,
+      colors: ["#333333", "#ffaa00"],
+      effects: { glow: true, smoke: true },
+      recommended_3d_assets: { product_model: "crystal" }
+    }
+  },
+  
+  "H-N": {
+    possible: true,
+    reaction_type: "Sintez",
+    explanation: "Azot va vodorod ammiak hosil qiladi.",
+    products: ["NH₃ (Ammiak)"],
+    visualization_plan: {
+      template: "gas_evolution",
+      duration_ms: 2800,
+      colors: ["#87CEEB"],
+      effects: { bubbles: true },
+      recommended_3d_assets: { product_model: "nh3_molecule" }
     }
   },
 
-  // Glukoza (C + H + O) - fotosintez
+  "H-O": {
+    possible: true,
+    reaction_type: "Sintez",
+    explanation: "Vodorod va kislorod suv hosil qiladi.",
+    products: ["H₂O (Suv)"],
+    visualization_plan: {
+      template: "explosion_bubbles",
+      duration_ms: 3500,
+      colors: ["#3b82f6", "#ffffff"],
+      effects: { bubbles: true, flash: true, explosion: true },
+      recommended_3d_assets: { product_model: "h2o_molecule" }
+    }
+  },
+
+  "H-S": {
+    possible: true,
+    reaction_type: "Sintez",
+    explanation: "Vodorod va oltingugurt vodorod sulfid gazini hosil qiladi.",
+    products: ["H₂S (Vodorod sulfid)"],
+    visualization_plan: {
+      template: "gas_evolution",
+      duration_ms: 2200,
+      colors: ["#ffffff", "#ffff00"],
+      effects: { bubbles: true },
+      recommended_3d_assets: { product_model: "h2s_molecule" }
+    }
+  },
+
+  "He-O": {
+    possible: false,
+    reaction_type: "Reaksiya yo'q",
+    explanation: "Geliy asil gaz.",
+    products: [],
+    visualization_plan: { template: "none", duration_ms: 1000, colors: [], effects: {}, recommended_3d_assets: { product_model: null } }
+  },
+
+  "Mg-O": {
+    possible: true,
+    reaction_type: "Yonish",
+    explanation: "Magniy oq yorug'lik bilan yonib, magniy oksidi hosil qiladi.",
+    products: ["MgO (Magniy oksidi)"],
+    visualization_plan: {
+      template: "flash",
+      duration_ms: 2000,
+      colors: ["#ffffff", "#ffffcc"],
+      effects: { flash: true, smoke: true },
+      recommended_3d_assets: { product_model: "crystal" }
+    }
+  },
+
+  "Ne-O": {
+    possible: false,
+    reaction_type: "Reaksiya yo'q",
+    explanation: "Neon inert gaz.",
+    products: [],
+    visualization_plan: { template: "none", duration_ms: 1000, colors: [], effects: {}, recommended_3d_assets: { product_model: null } }
+  },
+
+  // 3 ELEMENTLILAR
   "C-H-O": {
     possible: true,
-    reaction_type: "Fotosintez",
-    explanation: "Uglerod, vodorod va kisloroddan o'simliklar quyosh nuri yordamida glukoza hosil qiladi",
+    reaction_type: "Organik sintez",
+    explanation: "Glukoza hosil bo'lishi.",
     products: ["C₆H₁₂O₆ (Glyukoza)"],
     visualization_plan: {
       template: "organic_growth",
       duration_ms: 6000,
       colors: ["#90EE90", "#228B22"],
       effects: { glow: true, particles: true },
-      recommended_3d_assets: { product_model: "glucose_molecule" }
+      recommended_3d_assets: { product_model: "generic" }
     }
   },
 
-  // Suv + Karbonat angidrid → Uglerod kislotasi
-  "C-H-O": {
+  // C2H2 (Asetilen)
+  "C-H-C": {
     possible: true,
-    reaction_type: "Eruvchi reaksiya",
-    explanation: "CO₂ suvda erib, uglerod kislotasini hosil qiladi (CO₂ + H₂O ⇌ H₂CO₃)",
-    products: ["H₂CO₃ (Uglerod kislotasi)"],
+    reaction_type: "Sintez",
+    explanation: "Asetilen gazi.",
+    products: ["C₂H₂ (Asetilen)"],
     visualization_plan: {
-      template: "gas_dissolve",
-      duration_ms: 3000,
-      colors: ["#3b82f6", "#888888"],
+      template: "gas_evolution",
+      duration_ms: 2200,
+      colors: ["#333333", "#ffffff"],
       effects: { bubbles: true },
-      recommended_3d_assets: { product_model: "h2co3" }
+      recommended_3d_assets: { product_model: "c2h2_molecule" }
     }
   },
 
-  // Nitrat kislota (H + N + O)
   "H-N-O": {
     possible: true,
     reaction_type: "Sintez",
-    explanation: "Azot va kislorod birikib, keyin vodorod bilan nitrat kislota hosil qiladi",
-    products: ["HNO₃ (Nitrat kislota)"],
+    explanation: "Azot kislotasi.",
+    products: ["HNO₃ (Azot kislota)"],
     visualization_plan: {
       template: "acid_formation",
-      duration_ms: 2800,
-      colors: ["#ff0000", "#ffff00"],
-      effects: { flash: true, bubbles: true },
-      recommended_3d_assets: { product_model: "hno3_molecule" }
+      duration_ms: 3000,
+      colors: ["#3b82f6", "#ff0000"],
+      effects: { bubbles: true, smoke: true },
+      recommended_3d_assets: { product_model: "generic" }
     }
   },
 
-  // Sulfat kislota (H + S + O)
   "H-O-S": {
     possible: true,
     reaction_type: "Sintez",
-    explanation: "Oltingugurt kislorod bilan yonib SO₃ hosil qiladi, keyin suv bilan H₂SO₄ beradi",
+    explanation: "Sulfat kislota.",
     products: ["H₂SO₄ (Sulfat kislota)"],
     visualization_plan: {
       template: "acid_formation",
-      duration_ms: 3200,
+      duration_ms: 3000,
       colors: ["#ffff00", "#ff0000"],
-      effects: { flash: true, smoke: true },
-      recommended_3d_assets: { product_model: "h2so4_molecule" }
+      effects: { bubbles: true, smoke: true },
+      recommended_3d_assets: { product_model: "generic" }
     }
-  },
-
-  // Qanday qilib ko'proq qo'shish mumkin?
-  // Yangi reaksiya qo'shish uchun faqat shunday yozasan:
-  // "Al-H-O": { ... }  // masalan, alyuminiy gidroksidi
-  // "C-H-Cl": { ... }  // xloroform yoki boshqa organik birikmalar
+  }
 };
 
-// REAKSIYAGA KIRISHMAYDIGANLAR UCHUN STANDART JAVOB
 export const NO_REACTION_TEMPLATE: ReactionResult = {
   possible: false,
   products: [],
-  explanation: "Bu elementlar normal sharoitda o'zaro reaksiyaga kirishmaydi yoki barqaror birikma hosil qilmaydi.",
-  why_no_reaction: "Kimyoviy bog‘lanish uchun yetarli energiya yoki mos keluvchi valentlik yo‘q.",
+  reaction_type: "Reaksiya aniqlanmadi",
+  explanation: "Ushbu elementlar reaksiyaga kirishmaydi.",
   visualization_plan: {
     template: "none",
     duration_ms: 1500,
     colors: ["#cccccc"],
-    effects: { bubbles: false, flash: false, crystals: false },
+    effects: {},
     recommended_3d_assets: { product_model: null }
   }
 };

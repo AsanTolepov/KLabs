@@ -24,9 +24,6 @@ const ReactionResultCard: React.FC<ReactionResultCardProps> = ({ result, onReset
     return () => clearTimeout(timer);
   }, [result, viz]);
 
-  // Suv uchun maxsus ranglar legendasi
-  const isWater = viz.recommended_3d_assets.product_model?.includes('water') || viz.recommended_3d_assets.product_model === 'h2o';
-
   return (
     <div className="w-full relative mt-4 animate-slideUp pb-6">
       <div className={`rounded-2xl border shadow-lg overflow-hidden bg-white ${result.possible ? 'border-green-200' : 'border-amber-200'}`}>
@@ -56,7 +53,7 @@ const ReactionResultCard: React.FC<ReactionResultCardProps> = ({ result, onReset
         </div>
 
         <div className="p-4 space-y-4">
-          {/* 3D Viewer Container - 4-rasm uslubida */}
+          {/* 3D Viewer Container */}
           {result.possible && viz.recommended_3d_assets.product_model && (
             <div className="w-full h-60 bg-[#0F172A] rounded-xl overflow-hidden relative shadow-inner border border-slate-700">
                 {/* Tepada label */}
@@ -64,38 +61,10 @@ const ReactionResultCard: React.FC<ReactionResultCardProps> = ({ result, onReset
                     <Box className="w-3 h-3" /> 3D SIMULYATSIYA
                 </div>
 
-                {/* 3D Komponent */}
+                {/* 3D Komponent (Endi Legend uning ichida bor) */}
                 <MoleculeViewer modelType={viz.recommended_3d_assets.product_model} colors={viz.colors} />
-
-                {/* Pastda Legend (Tarkibi) - 4-rasmga o'xshash */}
-                <div className="absolute bottom-3 left-3 z-10 bg-white/90 backdrop-blur-sm p-2.5 rounded-lg border border-white/20 shadow-lg min-w-[100px]">
-                  <p className="text-[9px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tarkibi</p>
-                  <div className="space-y-1.5">
-                    {isWater ? (
-                      <>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                           <span className="w-3 h-3 rounded-full bg-red-500 shadow-sm border border-red-600/20 block"></span>
-                           Kislorod
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                           <span className="w-3 h-3 rounded-full bg-white shadow-sm border border-slate-300 block"></span>
-                           Vodorod
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                           <span className="w-3 h-3 rounded-full bg-blue-500 shadow-sm block"></span>
-                           Asosiy Atom
-                        </div>
-                        <div className="flex items-center gap-2 text-xs font-medium text-slate-800">
-                           <span className="w-3 h-3 rounded-full bg-slate-400 shadow-sm block"></span>
-                           Bog'langan
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
+                
+                {/* DIQQAT: Bu yerdan eski "Legend" qutisini OLIB TASHLADIM */}
             </div>
           )}
 

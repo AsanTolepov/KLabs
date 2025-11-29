@@ -114,3 +114,108 @@ export interface AIResult {
   explanation: string;
   confidence: number;
 }
+
+
+export interface VisualizationPlan {
+  template: "explosion_bubbles" | "crystal_growth" | "gas_evolution" | "flash" | "rust_growth" | "crystal_glow" | "organic_growth" | "gas_dissolve" | "acid_formation" | "none";
+  duration_ms: number;
+  colors: string[];
+  effects: {
+    bubbles?: boolean;
+    flash?: boolean;
+    explosion?: boolean;
+    crystals?: boolean;
+    smoke?: boolean;
+    glow?: boolean;
+    particles?: boolean;
+    slow_growth?: boolean;
+  };
+  recommended_3d_assets: {
+    product_model: string | null;
+  };
+}
+
+export interface ReactionResult {
+  possible: boolean;
+  reaction_type?: string;
+  explanation: string;
+  products: string[];
+  visualization_plan: VisualizationPlan;
+  why_no_reaction?: string;
+}
+
+// --- ELEKTRONIKA TIPLARI ---
+export enum ComponentType {
+  BATTERY = 'battery',
+  RESISTOR = 'resistor',
+  LAMP = 'lamp',
+  SWITCH = 'switch',
+  CAPACITOR = 'capacitor',
+  VOLTMETER = 'voltmeter',
+  AMMETER = 'ammeter',
+  WIRE = 'wire'
+}
+
+export interface CircuitComponent {
+  id: string;
+  type: ComponentType;
+  x: number;
+  y: number;
+  rotation: number;
+  properties: Record<string, any>;
+  nodes: string[];
+}
+
+export interface SimulationResult {
+  nodes: Record<string, number>;
+  currents: Record<string, number>;
+}
+
+// --- KINEMATIKA TIPLARI ---
+export interface PhysicalObject {
+  id: string;
+  name: string;
+  mass: number;
+  area: number;
+  dragCoefficient: number;
+  frictionCoefficient: number;
+  color: string;
+  shape: 'sphere' | 'cube';
+}
+
+export interface EnvParams {
+  gravity: number;
+  airDensity: number;
+  windSpeed: number;
+  rampAngle: number;
+}
+
+export interface SimulationState {
+  t: number;
+  position: { x: number; y: number };
+  velocity: { x: number; y: number };
+  acceleration: { x: number; y: number };
+  displacement: number;
+}
+
+export type Tab = 'kinematics' | 'electrodynamics';
+
+
+export type ExperimentType = 'MICROSCOPE' | 'DISSECTION' | 'DNA' | 'ENZYMES' | 'OSMOSIS' | null;
+
+export interface SlideType {
+  id: string;
+  name: string;
+  type: 'onion' | 'cheek' | 'bacteria';
+  image: string;
+}
+
+export interface Nucleotide {
+  id: string;
+  base: 'A' | 'T' | 'G' | 'C';
+  x: number;
+  y: number;
+  isFixed?: boolean;
+}
+
+export type DnaStrand = Nucleotide[];

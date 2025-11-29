@@ -23,6 +23,8 @@ import LeaderboardScreen from './screens/LeaderboardScreen';
 import LaboratoryScreen from './screens/LaboratoryScreen';
 import ChemistryLab from './screens/labs/ChemistryLab';
 import PhysicsLab from './screens/labs/PhysicsLab';
+import KinematicsLab from './components/physics/KinematicsLab'; // Yangi
+import ElectronicsLab from './components/physics/ElectronicsLab'; // Yangi
 import BiologyLab from './screens/labs/BiologyLab';
 import SubjectGradesScreen from './screens/SubjectGradesScreen'; // <-- YANGI
 import GradeLessonsScreen from './screens/GradeLessonsScreen';
@@ -263,6 +265,8 @@ const App = () => {
                     <Route path="/laboratory" element={<LaboratoryScreen />} />
                     <Route path="/lab/chemistry" element={<ChemistryLab />} />
                     <Route path="/lab/physics" element={<PhysicsLab />} />
+                    <Route path="/lab/physics/kinematics" element={<KinematicsLab />} />
+        <Route path="/lab/physics/electronics" element={<ElectronicsLab />} />
                     <Route path="/lab/biology" element={<BiologyLab />} />
                     <Route path="/course/:id" element={<CourseDetails />} />
                     <Route path="/profile" element={<ProfileScreen user={user} />} />
