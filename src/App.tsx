@@ -12,12 +12,14 @@ import {
     onAuthStateChanged, 
     setPersistence, 
     browserLocalPersistence 
-} from 'firebase/auth'; // IMPORT QO'SHILDI
+} from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
-// Komponentlar & Ekranlar (O'zgarishsiz)
+// Komponentlar
 import Layout from './components/Layout';
 import AchievementPopup from './components/AchievementPopup';
+
+// Ekranlar
 import LoginScreen from './screens/LoginScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -47,84 +49,91 @@ const useAppStore = () => {
   const [newAchievement, setNewAchievement] = useState<any>(null);
 
   useEffect(() => {
+    let unsubscribe: () => void;
+
     const initAuth = async () => {
         try {
-            // 1. MAJBURIY PERSISTENCE SOZLASH (ENG MUHIM JOY)
-            // Bu ilova har ochilganda sessiyani local xotirada saqlashni buyuradi.
+            // Xavfsiz persistence sozlash
             await setPersistence(auth, browserLocalPersistence);
         } catch (e) {
-            console.error("Persistence error:", e);
+            console.warn("Persistence warning:", e);
         }
 
-        // 2. Keyin Auth holatini tekshirish
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            if (currentUser) {
-                // User bor
-                const docRef = doc(db, "users", currentUser.uid);
-                const docSnap = await getDoc(docRef);
+        unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            try {
+                if (currentUser) {
+                    const docRef = doc(db, "users", currentUser.uid);
+                    const docSnap = await getDoc(docRef);
 
-                if (docSnap.exists()) {
-                    let userData = docSnap.data() as User;
-                    
-                    // XP va Progress tuzatishlari...
-                    let calculatedXp = 0;
-                    let progressFixed = { ...(userData.progress || {}) };
-                    let isDataDirty = false;
-
-                    Object.keys(progressFixed).forEach((key) => {
-                        const lessonData = progressFixed[key];
-                        let score = Number(lessonData.score);
-                        if (Number.isNaN(score)) {
-                            score = 100; 
-                            progressFixed[key] = { ...lessonData, score: 100 };
-                            isDataDirty = true;
-                        }
-                        calculatedXp += score;
-                    });
-
-                    const achievements = userData.achievements || {};
-                    if (achievements['first_discovery']) calculatedXp += 50;
-                    if (achievements['quiz_master']) calculatedXp += 100;
-                    if (achievements['streak_3']) calculatedXp += 50;
-
-                    if (isDataDirty || Number.isNaN(userData.xp) || userData.xp !== calculatedXp) {
-                        userData.xp = calculatedXp;
-                        userData.progress = progressFixed;
-                        await updateDoc(docRef, { xp: calculatedXp, progress: progressFixed });
-                    }
-
-                    const today = new Date().toDateString();
-                    if (userData.lastLoginDate !== today) {
-                        const yesterday = new Date();
-                        yesterday.setDate(yesterday.getDate() - 1);
+                    if (docSnap.exists()) {
+                        let userData = docSnap.data() as User;
                         
-                        if (userData.lastLoginDate === yesterday.toDateString()) {
-                        userData.streak = (userData.streak || 0) + 1;
-                        } else {
-                        userData.streak = 1;
-                        }
-                        
-                        await updateDoc(docRef, { streak: userData.streak, lastLoginDate: today });
-                        userData.lastLoginDate = today;
-                    }
+                        // XP Fix
+                        let calculatedXp = 0;
+                        let progressFixed = { ...(userData.progress || {}) };
+                        let isDataDirty = false;
 
-                    setUser(userData);
-                    setProgress(userData.progress || {});
+                        Object.keys(progressFixed).forEach((key) => {
+                            const lessonData = progressFixed[key];
+                            let score = Number(lessonData.score);
+                            if (Number.isNaN(score)) {
+                                score = 100; 
+                                progressFixed[key] = { ...lessonData, score: 100 };
+                                isDataDirty = true;
+                            }
+                            calculatedXp += score;
+                        });
+
+                        // Achievement XP Fix
+                        const achievements = userData.achievements || {};
+                        if (achievements['first_discovery']) calculatedXp += 50;
+                        if (achievements['quiz_master']) calculatedXp += 100;
+                        if (achievements['streak_3']) calculatedXp += 50;
+
+                        if (isDataDirty || Number.isNaN(userData.xp) || userData.xp !== calculatedXp) {
+                            userData.xp = calculatedXp;
+                            userData.progress = progressFixed;
+                            await updateDoc(docRef, { xp: calculatedXp, progress: progressFixed });
+                        }
+
+                        // Streak
+                        const today = new Date().toDateString();
+                        if (userData.lastLoginDate !== today) {
+                            const yesterday = new Date();
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            
+                            if (userData.lastLoginDate === yesterday.toDateString()) {
+                            userData.streak = (userData.streak || 0) + 1;
+                            } else {
+                            userData.streak = 1;
+                            }
+                            
+                            await updateDoc(docRef, { streak: userData.streak, lastLoginDate: today });
+                            userData.lastLoginDate = today;
+                        }
+
+                        setUser(userData);
+                        setProgress(userData.progress || {});
+                    }
+                } else {
+                    setUser(null);
                 }
-            } else {
-                // User yo'q
+            } catch (error) {
+                console.error("Auth error:", error);
                 setUser(null);
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         });
-        
-        return unsubscribe;
     };
 
     initAuth();
+
+    return () => {
+        if (unsubscribe) unsubscribe();
+    };
   }, []);
 
-  // ... Boshqa funksiyalar (completeVideo, completeTask) o'zgarishsiz ...
   const completeVideo = async (lessonId: string) => {
     if (!auth.currentUser || !user) return;
     const currentLessonProgress = progress[lessonId] || {};
