@@ -265,8 +265,7 @@ const App = () => {
                     <Route path="/laboratory" element={<LaboratoryScreen />} />
                     <Route path="/lab/chemistry" element={<ChemistryLab />} />
                     <Route path="/lab/physics" element={<PhysicsLab />} />
-                    <Route path="/lab/physics/kinematics" element={<KinematicsLab />} />
-        <Route path="/lab/physics/electronics" element={<ElectronicsLab />} />
+                    
                     <Route path="/lab/biology" element={<BiologyLab />} />
                     <Route path="/course/:id" element={<CourseDetails />} />
                     <Route path="/profile" element={<ProfileScreen user={user} />} />
